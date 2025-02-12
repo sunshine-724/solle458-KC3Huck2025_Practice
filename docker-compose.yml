@@ -1,0 +1,34 @@
+version: '3.8'
+services:
+  frontend:
+    build:
+      context: ./frontend
+    volumes:
+      - ./frontend:/app/frontend
+    container_name: frontend
+    depends_on:
+      - backend
+    ports:
+      - "3000:3000"
+    networks:
+      - dev_network
+
+
+  backend:
+    build:
+      context: ./backend
+    volumes:
+      - ./backend:/app/backend
+    container_name: backend
+    ports:
+      - "5001:5001"
+    environment:
+      - FLASK_APP=app.py
+      - FLASK_ENV=development  # 自動リロード有効化
+      - FLASK_RUN_HOST=0.0.0.0
+    networks:
+      - dev_network
+
+networks:
+  dev_network:
+    driver: bridge
